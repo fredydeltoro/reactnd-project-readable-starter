@@ -2,12 +2,22 @@ import React, { Component } from 'react';
 import { Route, NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import '../App.css';
+import Modal from 'react-modal';
 import MainPage from './MainPage';
 import Category from './Category';
 import Post from './Post';
-import * as _ from 'lodash';
+import NewPost from './NewPost'
 
 class App extends Component {
+  state = {
+    postModalOpen: false
+  }
+
+toggleModal = () =>{
+    this.setState((prevState) =>(
+      {postModalOpen:!prevState.postModalOpen}
+    ))}
+
   render() {
     return (
       <div>
@@ -24,9 +34,16 @@ class App extends Component {
                 )
               }
             </ul>
+            <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.toggleModal}>New Post</button>
           </div>
           </div>
         </nav>
+        <Modal
+          className="modal-dialog modal-lg"
+          isOpen={this.state.postModalOpen}
+          >
+            <NewPost toogleModal={this.toggleModal} categories={this.props.categories} currentCategory={window.location.pathname}/>
+        </Modal>
         <main className="container">
           <Route
             exact

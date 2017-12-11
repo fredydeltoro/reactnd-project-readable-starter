@@ -1,6 +1,7 @@
 const headers = {
   'Authorization': 'whatever-you-want',
-  'credentials': "same-origin"
+  'credentials': 'same-origin',
+  'Content-Type': 'application/json'
 }
 
 export const getCategories = () =>
@@ -27,3 +28,30 @@ export const getComments = (id) =>
   fetch(`http://localhost:3001/posts/${id}/comments`, {headers:headers})
   	.then(response => response.json())
   	.then(response => response)
+
+export const makePost = (post) =>
+fetch('http://localhost:3001/posts', {
+  headers: headers,
+  method: 'POST',
+  body:JSON.stringify(post)
+})
+.then(response => response.json())
+.then(response => response)
+
+export const makeComment = (comment) =>
+fetch('http://localhost:3001/comments', {
+  headers: headers,
+  method: 'POST',
+  body:JSON.stringify(comment)
+})
+.then(response => response.json())
+.then(response => response)
+
+export const voteComment = (id, option) =>
+fetch(`http://localhost:3001/comments/${id}`, {
+  headers: headers,
+  method: 'POST',
+  body:JSON.stringify({option})
+})
+.then(response => response.json())
+.then(response => response)

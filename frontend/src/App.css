@@ -1,3 +1,150 @@
+.comments{
+  border-top: 1px solid #eee;
+  padding: 2rem 0;
+}
+
+.comments ul{
+  list-style: none;
+  padding: 0px;
+}
+
+.comments li {
+  margin-bottom: 15px;
+}
+
+.comment{
+  display: inline-block;
+}
+
+.comment img{
+  width: 64px;
+  float: left;
+  margin-right: 15px;
+}
+
+.comment .content{
+  float: right;
+}
+
+.comment small {
+  color: #9a9a9a;
+}
+
+.comment .comment-votes {
+  display: flex;
+  color: #9a9a9a;
+}
+
+.comment .comment-votes .up-comment,.down-comment{
+  line-height: 1;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.comment .comment-votes small{
+  margin-right: 10px;
+}
+
+.comment .comment-votes .up-comment{
+  padding-right: 5px;
+  border-right: solid 2px #dbdfe4;
+}
+
+.comment .comment-votes .down-comment{
+  padding-left: 5px;
+}
+
+.comment-form{
+  margin-bottom: 15px;
+}
+
+.coment-form form{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 100%;
+  line-height: 1;
+  font-family: inherit;
+}
+
+.comment-form form .comment-box{
+  position: relative;
+}
+
+.comment-form form .comment-box .textarea-wrapper {
+  background: #fff;
+  border: 2px solid #dbdfe4;
+  position: relative;
+  border-radius: 4px;
+  overflow: auto;
+  word-wrap: break-word;
+  max-height: 600px;
+  height: 100%;
+  width: 70%;
+}
+
+.comment-form form .comment-box textarea{
+  border: none;
+  resize: none;
+  width: 100%;
+  height: 80px;
+}
+
+.comment-form form .comment-box textarea:focus{
+  outline: none;
+}
+
+.comment-form form .comment-box .comment-form-actions{
+  background: #f6f8f9;
+  border-radius: 0 0 2px 2px;
+  border-top: solid 2px #dbdfe4;
+  height: 36px;
+  transition: opacity linear .2s;
+  margin-top: -8px;
+}
+
+.comment-form form .comment-box .comment-form-actions .post-comment{
+  background: rgba(29,47,58,.6);
+  color: white;
+  float: right;
+  height: 100%;
+  border: none;
+  border-radius: 0 0 3px;
+  font-size: 12px;
+  padding: 0px 14px;
+}
+
+.comment-form form .comment-box .comment-form-actions .comment-author{
+  height: 100%;
+  border: none;
+  background: none;
+  margin-left: 5px;
+  width: 60%;
+}
+
+.comment-form form .comment-box .comment-form-actions input:focus{
+  outline: none;
+}
+
+.header-post{
+  margin-bottom: 2em;
+}
+
+.header-post span{
+  color: #9a9a9a;
+}
+
+.post{
+  margin-bottom: 4em;
+}
+
+.post-preview h2{
+  max-height: 70px;
+  height: 100%;
+}
+
 .post-properties{
   list-style: none;
   margin: 0;

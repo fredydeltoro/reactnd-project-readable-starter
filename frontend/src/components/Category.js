@@ -16,7 +16,7 @@ class Category extends Component {
       })
     } else {
       let posts = props.posts.filter(post => {
-        if (post.category == category) {
+        if (post.category === category) {
           return post;
         }
       });

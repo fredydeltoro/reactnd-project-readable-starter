@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { SET_CATEGORIES, SET_POSTS } from '../actions';
+import { SET_CATEGORIES, SET_POSTS, SET_POST } from '../actions';
 
 const categoriesState = [];
 const postsState = [];
@@ -18,6 +18,9 @@ function posts (state=postsState, action) {
   switch (action.type) {
     case SET_POSTS:
        return action.posts
+      break;
+    case SET_POST:
+      return state.concat([action.post])
       break;
     default:
       return state

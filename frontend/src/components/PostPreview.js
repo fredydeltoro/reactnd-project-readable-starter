@@ -4,7 +4,7 @@ import {  Link } from 'react-router-dom';
 function PostPreview(props) {
   let post = props.post
   return(
-    <div className="col-md-4">
+    <div className="col-md-4 post-preview">
       <h2>{post.title}</h2>
       <ul className="post-properties">
         <li>
