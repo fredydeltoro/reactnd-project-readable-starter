@@ -47,11 +47,45 @@ fetch('http://localhost:3001/comments', {
 .then(response => response.json())
 .then(response => response)
 
+export const votePost = (id, option) =>
+fetch(`http://localhost:3001/posts/${id}`, {
+  headers: headers,
+  method: 'POST',
+  body:JSON.stringify({option})
+})
+.then(response => response.json())
+.then(response => response)
+
 export const voteComment = (id, option) =>
 fetch(`http://localhost:3001/comments/${id}`, {
   headers: headers,
   method: 'POST',
   body:JSON.stringify({option})
+})
+.then(response => response.json())
+.then(response => response)
+
+export const editPost = (id, post) =>
+fetch(`http://localhost:3001/posts/${id}`, {
+  headers: headers,
+  method: 'PUT',
+  body:JSON.stringify({...post})
+})
+.then(response => response.json())
+.then(response => response)
+
+export const deletePost = (id) =>
+fetch(`http://localhost:3001/posts/${id}`, {
+  headers: headers,
+  method: 'DELETE',
+})
+.then(response => response.json())
+.then(response => response)
+
+export const deleteComment = (id) =>
+fetch(`http://localhost:3001/comments/${id}`, {
+  headers: headers,
+  method: 'DELETE',
 })
 .then(response => response.json())
 .then(response => response)

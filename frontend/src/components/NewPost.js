@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { makePost } from '../actions';
+import { makePost, modifyPost } from '../actions';
 import { getId } from '../utils/utils';
 import { connect } from 'react-redux';
 import serializeForm from 'form-serialize';
+import { editPost } from '../utils/api';
 
 class NewPost extends Component {
   state = {
-    currentCategory: this.props.currentCategory.replace('/', ''),
-    categories: this.props.categories
+    currentCategory: '',
+    categories: this.props.categories ? this.props.categories:[],
+    edit: false
   };
 
   close = ()=>{
@@ -16,12 +18,22 @@ class NewPost extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-
     let post = serializeForm(e.target, {hash:true});
-    let timeStamp = new Date();
-    post.timestamp = timeStamp.getTime();
-    post.id = getId();
-    this.props.dispatch(makePost(post))
+    if (this.state.edit) {
+      const oldPost = this.props.post
+      const editedPost = {}
+      oldPost.title !== post.title ? editedPost.title = post.title : null;
+      oldPost.body !== post.body ? editedPost.body = post.body : null;
+      editPost(oldPost.id, editedPost).then((res) => {
+        this.props.editingPost(res)
+      })
+    } else {
+      let timeStamp = new Date();
+      post.timestamp = timeStamp.getTime();
+      post.id = getId();
+      this.props.dispatch(makePost(post, this.props.order))
+    }
+
     this.close()
   }
 
@@ -30,6 +42,16 @@ class NewPost extends Component {
     this.setState(()=>(
         {currentCategory: category}
       ))
+  }
+
+  componentDidMount() {
+    if (this.props.currentCategory) {
+      this.setState({currentCategory: this.props.currentCategory.replace('/', '')})
+    } else {
+      this.setState({edit: true})
+      document.querySelector('#post-title').value = this.props.post.title;
+      document.querySelector('#post-body').value = this.props.post.body;
+    }
   }
 
   render() {
@@ -47,21 +69,26 @@ class NewPost extends Component {
                <label htmlFor="post-title" className="form-control-label">Title:</label>
                <input type="text" className="form-control" name="title" id="post-title" required />
              </div>
-             <div className="form-group">
-               <label htmlFor="post-author" className="form-control-label">Author:</label>
-               <input type="text" className="form-control" name="author" id="post-author" required />
-             </div>
-             <div className="form-group">
-               <label htmlFor="post-category" className="form-control-label">Category:</label>
-               <select onChange={this.handleSelect} name="category" value={this.state.currentCategory} id="post-category" className="form-control" required>
-                 <option value="">Select a category</option>
-                 {
-                   this.state.categories.map((category) => (
-                     <option key={category.path} value={category.path}>{category.name}</option>
-                   ))
-                 }
-               </select>
-             </div>
+             {
+               this.state.edit ? '':<div className="form-group">
+                 <label htmlFor="post-author" className="form-control-label">Author:</label>
+                 <input type="text" className="form-control" name="author" id="post-author" required />
+               </div>
+             }
+
+             {
+               this.state.edit ? '': <div className="form-group">
+                 <label htmlFor="post-category" className="form-control-label">Category:</label>
+                 <select onChange={this.handleSelect} name="category" value={this.state.currentCategory} id="post-category" className="form-control" required>
+                   <option value="">Select a category</option>
+                   {
+                     this.state.categories.map((category) => (
+                       <option key={category.path} value={category.path}>{category.name}</option>
+                     ))
+                   }
+                 </select>
+               </div>
+             }
              <div className="form-group">
                <label htmlFor="post-body" className="form-control-label">Body:</label>
                <textarea className="form-control" name="body" id="post-body" rows="5"></textarea>
@@ -69,7 +96,7 @@ class NewPost extends Component {
          </div>
          <div className="modal-footer">
            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.close}>Close</button>
-           <input type="submit" value="Post" className="btn btn-primary" />
+           <input type="submit" value={this.props.post ? 'Edit': 'Post'} className="btn btn-primary" />
          </div>
        </div>
      </form>

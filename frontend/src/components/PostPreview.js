@@ -1,34 +1,34 @@
 import React, { Component } from 'react';
 import {  Link } from 'react-router-dom';
+import { dateFilter } from '../utils/utils';
 
 function PostPreview(props) {
   let post = props.post
   return(
-    <div className="col-md-4 post-preview">
-      <h2>{post.title}</h2>
+    <div className="col-md-8 offset-md-2 post-preview">
+      <Link
+        role="button"
+        to={{
+        pathname: `/post/${post.id}`,
+      }}>
+        <h2>
+          {post.title}
+        </h2>
+        <h3>
+          {post.body.slice(0, 120)} {post.body.length > 120 ? '...' : ''}
+        </h3>
+      </Link>
       <ul className="post-properties">
         <li>
-          <b>Author:</b> {post.author}
+          Posted on {dateFilter(post.timestamp)} by {post.author}
         </li>
         <li>
-          <b>Category:</b> {post.category}
+          Category: {post.category}
         </li>
         <li>
-          <b>Score:</b> {post.voteScore}
+          Score: {post.voteScore}
         </li>
       </ul>
-      <p>
-        {post.body.slice(0, 120)} {post.body.length > 120 ? '...' : ''}
-      </p>
-      <p>
-        <Link
-          className="btn btn-primary"
-          role="button"
-          to={{
-          pathname: `/post/${post.id}`,
-          state: {post: post}
-        }}>View details »</Link>
-      </p>
     </div>
   )
 }

@@ -7,7 +7,7 @@ class MainPage extends Component {
 
   componentDidMount() {
     if (!this.props.posts.length)
-      this.props.dispatch(getPosts());
+      this.props.dispatch(getPosts(this.props.order));
     }
 
   render() {

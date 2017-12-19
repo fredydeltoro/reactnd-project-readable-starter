@@ -4,6 +4,9 @@ import * as _ from 'lodash';
 export const SET_CATEGORIES = 'SET_CATEGORIES';
 export const SET_POSTS = 'SET_POSTS';
 export const SET_POST = 'SET_POST';
+export const EDIT_POST = 'EDIT_POST';
+export const DELETE_POST = 'DELETE_POST';
+export const SORT = 'SORT';
 
 export function getCategories() {
   return dispatch =>
@@ -14,19 +17,29 @@ export function getCategories() {
     );
 }
 
-export function getPosts() {
-  return dispatch =>
-  api.getPosts()
-    .then(posts =>
+export function getPosts(order) {
+  return (dispatch, getState) =>{
+    api.getPosts()
+    .then(posts =>{
       dispatch(setPosts(posts))
-    );
+      const newState = getState()
+      if (newState.posts.length) {
+        dispatch(sort(order))
+      }
+    }
+  );
+  }
 }
 
-export function makePost(post) {
-  return dispatch =>{
+export function makePost(post, order) {
+  return (dispatch, getState) =>{
     api.makePost(post)
     .then((res) => {
-      dispatch(setPost(_.merge(post, res)))
+      const currentState = getState();
+      if (currentState.posts.length) {
+        dispatch(setPost(_.merge(post, res)))
+        dispatch(sort(order))
+      }
     })
   }
 }
@@ -45,9 +58,30 @@ export function setPosts(posts) {
   }
 }
 
+export function modifyPost(post) {
+  return {
+    type: EDIT_POST,
+    post
+  }
+}
+
 export function setPost(post) {
   return {
     type: SET_POST,
     post
+  }
+}
+
+export function removePost(id) {
+  return {
+    type: DELETE_POST,
+    id
+  }
+}
+
+export function sort(by) {
+  return {
+    type: SORT,
+    by
   }
 }

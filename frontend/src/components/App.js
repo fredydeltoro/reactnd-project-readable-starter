@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { sort } from '../actions';
 import '../App.css';
 import Modal from 'react-modal';
 import MainPage from './MainPage';
@@ -10,13 +11,41 @@ import NewPost from './NewPost'
 
 class App extends Component {
   state = {
-    postModalOpen: false
+    postModalOpen: false,
+    showDropDown: false,
+    order: 'newest'
   }
 
-toggleModal = () =>{
+  toogleDropDown = () => {
     this.setState((prevState) =>(
-      {postModalOpen:!prevState.postModalOpen}
-    ))}
+      {showDropDown:!prevState.showDropDown}
+    ))
+  }
+
+  handleOrder = (e) => {
+    let order = e.target.innerText;
+    this.setState({
+      order: order
+    });
+    switch (order) {
+      case 'best':
+        this.props.dispatch(sort('voteScore'));
+        break;
+      case 'newest':
+        this.props.dispatch(sort('timestamp'));
+        break;
+      case 'oldest':
+        this.props.dispatch(sort('-timestamp'));
+        break;
+
+    }
+  }
+
+  toggleModal = () =>{
+      this.setState((prevState) =>(
+        {postModalOpen:!prevState.postModalOpen}
+      ))
+    }
 
   render() {
     return (
@@ -33,6 +62,14 @@ toggleModal = () =>{
                   </li>
                 )
               }
+              <li className={`nav-item dropdown ${this.state.showDropDown ? 'show': ''}`} onClick={this.toogleDropDown}>
+                <a className="nav-link dropdown-toggle"> {this.state.order}</a>
+                <ul className="dropdown-menu">
+                  <li className="dropdown-item" onClick={this.handleOrder}>best</li>
+                  <li className="dropdown-item" onClick={this.handleOrder}>newest</li>
+                  <li className="dropdown-item" onClick={this.handleOrder}>oldest</li>
+                </ul>
+              </li>
             </ul>
             <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.toggleModal}>New Post</button>
           </div>
@@ -42,7 +79,7 @@ toggleModal = () =>{
           className="modal-dialog modal-lg"
           isOpen={this.state.postModalOpen}
           >
-            <NewPost toogleModal={this.toggleModal} categories={this.props.categories} currentCategory={window.location.pathname}/>
+            <NewPost toogleModal={this.toggleModal} categories={this.props.categories} currentCategory={window.location.pathname} order={this.props.order}/>
         </Modal>
         <main className="container">
           <Route
@@ -50,7 +87,7 @@ toggleModal = () =>{
             path="/"
             render={
               () => (
-                <MainPage posts={this.props.posts}/>
+                <MainPage posts={this.props.posts} order={this.props.order}/>
               )
             }
           />
@@ -67,12 +104,13 @@ toggleModal = () =>{
             exact
             path="/post/:id"
             render={
-              ({match, location}) => {
-                let post = false;
-                if (location.state) {
-                  post = location.state.post;
-                }
+              ({match}) => {
                 let id = match.params.id;
+                let post = this.props.posts.find((post) => {
+                  if (post.id === id) {
+                    return post
+                  }
+                })
                 return (
                   <Post id={id} post={post}/>
                 )
@@ -85,10 +123,11 @@ toggleModal = () =>{
   }
 }
 
-function mapStateToProps({categories, posts}) {
+function mapStateToProps({categories, posts, order}) {
   return {
     categories,
-    posts
+    posts,
+    order
   }
 }
 

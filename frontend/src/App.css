@@ -1,3 +1,6 @@
+body p{
+  font-size: 20px;
+}
 .comments{
   border-top: 1px solid #eee;
   padding: 2rem 0;
@@ -14,6 +17,18 @@
 
 .comment{
   display: inline-block;
+  width: 70%;
+}
+
+.comment .content{
+  float: right;
+  width: 82%;
+}
+
+.comment .content .comment-body{
+  max-height: 100px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .comment img{
@@ -22,37 +37,16 @@
   margin-right: 15px;
 }
 
-.comment .content{
+
+.comment .comment-delete{
   float: right;
+  cursor: pointer;
 }
 
 .comment small {
   color: #9a9a9a;
 }
 
-.comment .comment-votes {
-  display: flex;
-  color: #9a9a9a;
-}
-
-.comment .comment-votes .up-comment,.down-comment{
-  line-height: 1;
-  font-size: 1.2em;
-  cursor: pointer;
-}
-
-.comment .comment-votes small{
-  margin-right: 10px;
-}
-
-.comment .comment-votes .up-comment{
-  padding-right: 5px;
-  border-right: solid 2px #dbdfe4;
-}
-
-.comment .comment-votes .down-comment{
-  padding-left: 5px;
-}
 
 .comment-form{
   margin-bottom: 15px;
@@ -140,9 +134,37 @@
   margin-bottom: 4em;
 }
 
+ .post-controls {
+  margin-top: 5px;
+  width: 32%;
+  display: flow-root;
+}
+
+.post .post-controls .post-votes{
+  float: left;
+}
+
+.post .post-controls .btn{
+  padding: 0.2rem 1rem;
+  margin-left: 5px;
+  float: right;
+}
+
+.post-preview{
+  padding: 1em 0;
+}
+
 .post-preview h2{
-  max-height: 70px;
-  height: 100%;
+  font-weight: bold;
+}
+
+.post-preview a {
+  color: black;
+}
+
+.post-preview a:hover {
+  color: #0085a1;
+  text-decoration: none;
 }
 
 .post-properties{
@@ -150,13 +172,40 @@
   margin: 0;
   padding: 0;
   border-bottom: 1px solid #7dc3fe;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
 .post-properties li{
   display: inline-block;
   margin-right: 10px;
+  color: #868e96;
+  font-size: 20px;
+}
+
+.votes {
+  display: flex;
+  color: #9a9a9a;
+}
+
+.votes .up-comment,.down-comment{
+  line-height: 1;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.votes small{
+  margin-right: 10px;
+}
+
+.votes .up-comment{
+  padding-right: 5px;
+  border-right: solid 2px #dbdfe4;
+}
+
+.votes .down-comment{
+  padding-left: 5px;
 }
 
 main{
