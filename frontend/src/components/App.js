@@ -102,7 +102,7 @@ class App extends Component {
           />
           <Route
             exact
-            path="/post/:id"
+            path="/:category/:id"
             render={
               ({match}) => {
                 let id = match.params.id;

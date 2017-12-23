@@ -9,6 +9,8 @@ import unknowUser from '../no-user.png';
 import CommentForm from './CommentForm';
 import Votes from './Votes';
 import NewPost from './NewPost';
+import NotFound from './NotFound';
+import * as _ from 'lodash';
 
 class Post extends Component {
   state = {
@@ -39,7 +41,7 @@ class Post extends Component {
       .then((res) => {
         this.props.dispatch(removePost(res.id))
       })
-      this.setState({redirect:true})
+      this.setState({redirect:true});
   }
 
   handleDeleteComment = (id) => {
@@ -109,7 +111,10 @@ class Post extends Component {
     let post = this.state.post
     return (
       <div>
-        { !this.state.redirect ?
+        {
+          this.state.redirect ? <Redirect to="/" /> :
+
+          !_.isEmpty(post) ?
           <div className="row">
             <div className="col-md-8 offset-md-2">
               <div className="post">
@@ -174,7 +179,7 @@ class Post extends Component {
                 </ul>
               </div>
             </div>
-          </div>  : <Redirect to="/"/>
+          </div>  : <NotFound />
         }
       </div>
     );

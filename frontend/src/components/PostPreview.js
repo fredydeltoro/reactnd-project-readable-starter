@@ -9,7 +9,7 @@ function PostPreview(props) {
       <Link
         role="button"
         to={{
-        pathname: `/post/${post.id}`,
+        pathname: `/${post.category}/${post.id}`,
       }}>
         <h2>
           {post.title}
