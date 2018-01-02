@@ -14,7 +14,7 @@ class MainPage extends Component {
     return (
       <div className="row">
         {
-          this.props.posts.map((post) => <PostPreview key={post.id} post={post}/>)
+          this.props.posts.map((post) => <PostPreview key={post.id} dispatch={this.props.dispatch} post={post}/>)
         }
       </div>
     )

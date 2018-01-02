@@ -16,14 +16,23 @@ class Post extends Component {
   state = {
     post: {},
     comments: [],
-    edittModalOpen: false,
-    redirect: false
+    editModalOpen: false,
+    editCommentModalOpen: false,
+    redirect: false,
+    comment: {}
   }
 
   addComment = (comment) => {
-    this.setState((prevState) => (
-      {comments : prevState.comments.concat([comment])}
-    ))
+    this.setState((prevState) => {
+      let newPost = prevState.post;
+      newPost.commentCount += 1;
+      this.props.dispatch(modifyPost(newPost));
+      return {
+        comments : prevState.comments.concat([comment]),
+        post:newPost
+      }
+     }
+    )
   }
 
   editingPost = (newPost) => {
@@ -34,6 +43,19 @@ class Post extends Component {
       this.setState({post:newPost});
     }
     this.props.dispatch(sort(this.props.order));
+  }
+
+  editingComment = (editedComment) => {
+    this.setState((prevState) => {
+      let newComments = prevState.comments.map((comment) => {
+        if (comment.id === editedComment.id) {
+          return editedComment;
+        } else {
+          return comment;
+        }
+      })
+      return {comments: newComments}
+    })
   }
 
   handleDelete = (e) => {
@@ -72,16 +94,7 @@ class Post extends Component {
         case 'comment':
         voteComment(id, option)
           .then((res) => {
-            this.setState((prevState) => {
-              let newComments = prevState.comments.map((comment) => {
-                if (comment.id === id) {
-                  return res;
-                } else {
-                  return comment;
-                }
-              })
-              return {comments: newComments}
-            })
+            this.editingComment(res);
           })
           break;
       }
@@ -90,8 +103,17 @@ class Post extends Component {
 
   openModal = () => {
     this.setState((prevState) =>(
-      {edittModalOpen:!prevState.edittModalOpen}
+      {editModalOpen:!prevState.editModalOpen}
     ))
+  }
+
+  openModalComment = (comment) => {
+    return (e) => {
+      this.setState({comment})
+      this.setState((prevState) =>(
+        {editCommentModalOpen:!prevState.editCommentModalOpen}
+      ))
+    }
   }
 
   componentDidMount() {
@@ -140,15 +162,26 @@ class Post extends Component {
                     {post.body}
                   </p>
                 </div>
+                <div className="count-comment">
+                  <small>
+                    Comments {post.commentCount}
+                  </small>
+                </div>
               </div>
             </div>
             <Modal
               className="modal-dialog modal-lg"
-              isOpen={this.state.edittModalOpen}
+              isOpen={this.state.editModalOpen}
               >
                 <NewPost toogleModal={this.openModal} post={post} editingPost={this.editingPost}/>
             </Modal>
             <div className="col-md-8 offset-md-2">
+              <Modal
+                className="modal-dialog modal-lg"
+                isOpen={this.state.editCommentModalOpen}
+                >
+                  <NewPost toogleModal={this.openModalComment} comment={this.state.comment} editingComment={this.editingComment}/>
+              </Modal>
               <div className="comments">
                 <CommentForm parentId={post.id} addComment={this.addComment} />
                 <ul>
@@ -171,7 +204,14 @@ class Post extends Component {
                           <div className="comment-body">
                             {comment.body}
                           </div>
-                          <Votes data={comment} handleVote={this.handleVote} type='comment' />
+                          <div className="comment-controls">
+                            <Votes data={comment} handleVote={this.handleVote} type='comment' />
+                            <div className="edit-comment" onClick={this.openModalComment(comment)}>
+                              <small>
+                                Edit
+                              </small>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </li>

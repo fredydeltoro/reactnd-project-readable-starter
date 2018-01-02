@@ -3,7 +3,7 @@ import { makePost, modifyPost } from '../actions';
 import { getId } from '../utils/utils';
 import { connect } from 'react-redux';
 import serializeForm from 'form-serialize';
-import { editPost } from '../utils/api';
+import { editPost, editComment } from '../utils/api';
 
 class NewPost extends Component {
   state = {
@@ -13,25 +13,39 @@ class NewPost extends Component {
   };
 
   close = ()=>{
-    this.props.toogleModal();
+    if (this.props.comment) {
+      this.props.toogleModal({})();
+    } else {
+      this.props.toogleModal();
+    }
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    let post = serializeForm(e.target, {hash:true});
-    if (this.state.edit) {
-      const oldPost = this.props.post
-      const editedPost = {}
-      oldPost.title !== post.title ? editedPost.title = post.title : null;
-      oldPost.body !== post.body ? editedPost.body = post.body : null;
+    let content = serializeForm(e.target, {hash:true});
+    if (this.props.post) {
+      const oldPost = this.props.post;
+      const editedPost = {};
+      oldPost.title !== content.title ? editedPost.title = content.title : null;
+      oldPost.body !== content.body ? editedPost.body = content.body : null;
       editPost(oldPost.id, editedPost).then((res) => {
         this.props.editingPost(res)
       })
+    } else if (this.props.comment) {
+      const oldComment = this.props.comment;
+      const editedComment = {};
+      oldComment.body !== content.body ? editedComment.body = content.body : null;
+      let timeStamp = new Date();
+      content.timestamp = timeStamp.getTime();
+      editComment(oldComment.id, editedComment).then((res) => {
+        this.props.editingComment(res)
+        console.log(res);
+      })
     } else {
       let timeStamp = new Date();
-      post.timestamp = timeStamp.getTime();
-      post.id = getId();
-      this.props.dispatch(makePost(post, this.props.order))
+      content.timestamp = timeStamp.getTime();
+      content.id = getId();
+      this.props.dispatch(makePost(content, this.props.order))
     }
 
     this.close()
@@ -47,10 +61,14 @@ class NewPost extends Component {
   componentDidMount() {
     if (this.props.currentCategory) {
       this.setState({currentCategory: this.props.currentCategory.replace('/', '')})
-    } else {
+    } else if(this.props.post) {
       this.setState({edit: true})
       document.querySelector('#post-title').value = this.props.post.title;
       document.querySelector('#post-body').value = this.props.post.body;
+    } else if (this.props.comment) {
+      this.setState({edit: true})
+      console.log(this.props.comment);
+      document.querySelector('#post-body').value = this.props.comment.body;
     }
   }
 
@@ -65,12 +83,14 @@ class NewPost extends Component {
            </button>
          </div>
          <div className="modal-body">
-             <div className="form-group">
-               <label htmlFor="post-title" className="form-control-label">Title:</label>
-               <input type="text" className="form-control" name="title" id="post-title" required />
-             </div>
+           {
+             (this.props.post || !this.state.edit) && !this.props.comment ? <div className="form-group">
+             <label htmlFor="post-title" className="form-control-label">Title:</label>
+             <input type="text" className="form-control" name="title" id="post-title" required />
+           </div> : ''
+           }
              {
-               this.state.edit ? '':<div className="form-group">
+               this.state.edit ? '': <div className="form-group">
                  <label htmlFor="post-author" className="form-control-label">Author:</label>
                  <input type="text" className="form-control" name="author" id="post-author" required />
                </div>

@@ -47,6 +47,19 @@ body p{
   color: #9a9a9a;
 }
 
+.comment .content .comment-controls{
+  width: 25%;
+}
+
+.comment .content .comment-controls .votes{
+  float: left;
+}
+
+.comment .content .comment-controls .edit-comment{
+  float: right;
+  cursor: pointer;
+}
+
 
 .comment-form{
   margin-bottom: 15px;
@@ -132,6 +145,7 @@ body p{
 
 .post{
   margin-bottom: 4em;
+  position: relative;
 }
 
  .post-controls {
@@ -150,8 +164,32 @@ body p{
   float: right;
 }
 
+.post .count-comment{
+  position: absolute;
+  bottom: -4em;
+  border-bottom: 1px solid;
+}
+
 .post-preview{
   padding: 1em 0;
+}
+
+.post-preview .post-delete{
+  float: right;
+  cursor: pointer;
+}
+
+.post-preview .post-controls{
+  display: flex;
+}
+
+.post-preview .post-controls .btn{
+  padding: 0.2rem 1rem;
+  margin-left: 15px;
+}
+
+.post-preview .post-controls .votes{
+  height: 20px;
 }
 
 .post-preview h2{

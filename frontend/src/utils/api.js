@@ -74,6 +74,15 @@ fetch(`http://localhost:3001/posts/${id}`, {
 .then(response => response.json())
 .then(response => response)
 
+export const editComment = (id, comment) =>
+fetch(`http://localhost:3001/comments/${id}`, {
+  headers: headers,
+  method: 'PUT',
+  body:JSON.stringify({...comment})
+})
+.then(response => response.json())
+.then(response => response)
+
 export const deletePost = (id) =>
 fetch(`http://localhost:3001/posts/${id}`, {
   headers: headers,
